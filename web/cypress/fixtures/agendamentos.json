@@ -1,0 +1,53 @@
+{
+    "sucesso": {
+        "data": "15/12/2024",
+        "dia": "16",
+        "hora": "10:00",
+        "profissional": {
+            "nome": "Tina",
+            "matricula": 1003
+        },
+        "servico": {
+            "codigo": 3,
+            "descricao": "Combo"
+        },
+        "usuario": {
+            "nome": "Adriano Agendamento",
+            "email": "adrianoagendamento@gmail.com"
+        }
+    },
+    "duplicado": {
+        "data": "17/12/2024",
+        "dia": "17",
+        "hora": "14:00",
+        "profissional": {
+            "nome": "Kurt",
+            "matricula": 1008
+        },
+        "servico": {
+            "codigo": 1,
+            "descricao": "Corte"
+        },
+        "usuario": {
+            "nome": "James Travis",
+            "email": "jametrt@gmail.com"
+        }
+    },
+    "conflito": {
+        "data": "14/12/2024",
+        "dia": "14",
+        "hora": "16:00",
+        "profissional": {
+            "nome": "Jimi",
+            "matricula": 1006
+        },
+        "servico": {
+            "codigo": 1,
+            "descricao": "Corte"
+        },
+        "usuario": {
+            "nome": "David Nice",
+            "email": "davidnice@gmail.com"
+        }
+    }
+}
