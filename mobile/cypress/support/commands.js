@@ -23,3 +23,12 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+import './actions/login.actions'
+
+Cypress.Commands.add('verificaToast', (mensagem) => {
+    cy.get('.toast')
+        .should('be.visible')
+        .find('div[role="status"]')
+        .should('have.text', mensagem)
+})
