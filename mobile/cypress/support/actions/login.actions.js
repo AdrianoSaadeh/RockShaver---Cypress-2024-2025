@@ -1,19 +1,19 @@
-Cypress.Commands.add('login', (funcionario) => {
+Cypress.Commands.add('login', (profissional) => {
     cy.get('input[name="matricula"]')
-        .type(funcionario.matricula)
+        .type(profissional.matricula)
 
     cy.get('input[name="senha"]')
-        .type(funcionario.senha)
+        .type(profissional.senha)
 
     cy.contains('button', 'Entrar')
         .click()
 })
 
-Cypress.Commands.add('verificaUsuarioLogado', (funcionario) => {
+Cypress.Commands.add('verificaUsuarioLogado', (profissional) => {
     cy.get('.usuario-logado').within(() => {
         cy.get('small')
             .should('be.visible')
-            .and('have.text', `Olá ${funcionario.nome},`)
+            .and('have.text', `Olá ${profissional.nome},`)
 
         cy.get('h2')
             .should('be.visible')
