@@ -6,40 +6,12 @@ describe('Meus agendamentos', () => {
         cy.fixture('agendamentos.json').then((data) => {
             agendamentos = data.profissional.agendamentos; // Extraímos os agendamentos
             profissional = data.profissional; // Extraímos o profissional
-
-            cy.deleteMany(
-                { matricula: profissional.matricula },
-                { collection: 'agendamentos' }
-            )
-
-            // Iterando nos agendamentos
-            agendamentos.forEach((a) => {
-                cy.log(JSON.stringify(a));
-
-                // Fazendo a requisição
-                cy.request({
-                    method: 'POST',
-                    url: `${Cypress.env('baseApi')}/api/agendamentos`,
-                    headers: {
-                        'Content-type': 'application/json',
-                        'authorization': 'Bearer 3a8a9b8fae87baf503e7c5fe5b97fd72'
-                    },
-                    body: {
-                        nomeCliente: a.usuario.nome,
-                        emailCliente: a.usuario.email,
-                        data: a.data,
-                        hora: a.hora,
-                        matricula: profissional.matricula,
-                        codigoServico: a.servico.codigo
-                    }
-                }).then((response) => {
-                    expect(response.status).to.eq(201);
-                })
-            })
         })
+        cy.criarAgendamentosAPI(agendamentos, profissional)
     })
 
     beforeEach(() => {
+        cy.viewport('iphone-xr')
         cy.visit('/')
         cy.contains('p', 'Faça login com a sua conta')
             .should('be.visible')
@@ -48,9 +20,6 @@ describe('Meus agendamentos', () => {
     })
 
     it('Deve exibir os meus agendamentos', () => {
-        cy.viewport('iphone-xr')
-
-
         cy.get('ul li')
             .should('be.visible')
             .and('have.length', agendamentos.length)
@@ -66,5 +35,43 @@ describe('Meus agendamentos', () => {
                     .should('contain', agendamento.usuario.nome)
                     .and('contain', resultado)
             })
+    })
+    it('Deve cancelar um agendamento', () => {
+        const agendamento = agendamentos.find(x => x.usuario.email === 'peter.parker@dailybugle.com')
+        cy.log(agendamento.servico.descricao)
+
+        cy.contains('ul li', agendamento.usuario.nome)
+            .as('agendamentoItem')
+
+        cy.get('@agendamentoItem')
+            .should('be.visible')
+            .click()
+
+        cy.contains('span', 'Cancelar agendamento')
+            .should('be.visible')
+            .click()
+
+        cy.verificaToast('Agendamento cancelado com sucesso!')
+
+        cy.get('@agendamentoItem')
+            .should('not.exist')
+    })
+
+    it('Deve enviar uma solicitação de lembrete para o cliente', () => {
+        const agendamento = agendamentos.find(x => x.usuario.email === 'steve.rogers@avengers.com')
+
+        cy.contains('ul li', agendamento.usuario.nome)
+            .as('agendamentoItem')
+
+        cy.get('@agendamentoItem')
+            .should('be.visible')
+            .click()
+
+        cy.contains('span', 'Enviar lembrete por e-mail')
+            .should('be.visible')
+            .click()
+
+        cy.verificaToast('Lembrete enviado com sucesso!')
+
     })
 })
