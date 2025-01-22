@@ -1,8 +1,11 @@
 describe('Meus agendamentos', () => {
-    it('Deve exibir os meus agendamentos', () => {
+    var agendamentos = ''
+    var profissional = ''
+
+    before(() => {
         cy.fixture('agendamentos.json').then((data) => {
-            const agendamentos = data.profissional.agendamentos; // Extraímos os agendamentos
-            const profissional = data.profissional; // Extraímos o profissional
+            agendamentos = data.profissional.agendamentos; // Extraímos os agendamentos
+            profissional = data.profissional; // Extraímos o profissional
 
             cy.deleteMany(
                 { matricula: profissional.matricula },
@@ -33,31 +36,35 @@ describe('Meus agendamentos', () => {
                     expect(response.status).to.eq(201);
                 })
             })
-
-            cy.viewport('iphone-xr')
-            cy.visit('/')
-
-            cy.contains('p', 'Faça login com a sua conta')
-                .should('be.visible')
-
-            cy.login(profissional)
-            cy.verificaUsuarioLogado(profissional)
-
-            cy.get('ul li')
-                .should('be.visible')
-                .and('have.length', agendamentos.length)
-                .each(($li, index) => {
-
-                    cy.log(JSON.stringify(agendamentos[index]))
-
-                    const agendamento = agendamentos[index]
-                    const resultado = `${agendamento.servico.descricao} no dia ${agendamento.data} às ${agendamento.hora}`
-
-                    cy.wrap($li)
-                        .invoke('text')
-                        .should('contain', agendamento.usuario.nome)
-                        .and('contain', resultado)
-                })
         })
+    })
+
+    beforeEach(() => {
+        cy.visit('/')
+        cy.contains('p', 'Faça login com a sua conta')
+            .should('be.visible')
+        cy.login(profissional)
+        cy.verificaUsuarioLogado(profissional)
+    })
+
+    it('Deve exibir os meus agendamentos', () => {
+        cy.viewport('iphone-xr')
+
+
+        cy.get('ul li')
+            .should('be.visible')
+            .and('have.length', agendamentos.length)
+            .each(($li, index) => {
+
+                cy.log(JSON.stringify(agendamentos[index]))
+
+                const agendamento = agendamentos[index]
+                const resultado = `${agendamento.servico.descricao} no dia ${agendamento.data} às ${agendamento.hora}`
+
+                cy.wrap($li)
+                    .invoke('text')
+                    .should('contain', agendamento.usuario.nome)
+                    .and('contain', resultado)
+            })
     })
 })
