@@ -2,7 +2,9 @@
   "name": "mobile",
   "packageManager": "yarn@4.6.0",
   "devDependencies": {
+    "bson": "^6.10.1",
     "cypress": "^13.17.0",
+    "cypress-mongodb": "^6.2.1",
     "dotenv": "^16.4.7"
   }
 }

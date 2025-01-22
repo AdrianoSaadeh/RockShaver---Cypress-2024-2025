@@ -4,7 +4,10 @@ describe('Meus agendamentos', () => {
             const agendamentos = data.profissional.agendamentos; // Extraímos os agendamentos
             const profissional = data.profissional; // Extraímos o profissional
 
-            cy.log('todo');
+            cy.deleteMany(
+                { matricula: profissional.matricula },
+                { collection: 'agendamentos' }
+            )
 
             // Iterando nos agendamentos
             agendamentos.forEach((a) => {
@@ -30,6 +33,8 @@ describe('Meus agendamentos', () => {
                     expect(response.status).to.eq(201);
                 })
             })
+
+
         })
     })
 })
