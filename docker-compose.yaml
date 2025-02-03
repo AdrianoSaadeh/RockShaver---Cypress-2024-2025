@@ -32,7 +32,7 @@ services:
 
   rockshaver-api:
     container_name: rockshaver-api
-    image: papitodev/rockshaver-api:freeway
+    image: papitodev/rockshaver-api:frogger
     networks:
       - skynet
     depends_on:
@@ -49,7 +49,7 @@ services:
 
   rockshaver-web:
     container_name: rockshaver-web
-    image: papitodev/rockshaver-web:freeway
+    image: papitodev/rockshaver-web:frogger
     networks:
       - skynet
     depends_on:
@@ -62,7 +62,7 @@ services:
 
   rockshaver-mob:
     container_name: rockshaver-mob
-    image: papitodev/rockshaver-mob:freeway
+    image: papitodev/rockshaver-mob:frogger
     networks:
       - skynet
     depends_on:
