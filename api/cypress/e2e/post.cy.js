@@ -129,14 +129,3 @@ describe('POST /api/agendamentos', () => {
   })
 })
 
-Cypress.Commands.add('postAgendamento', (body) => {
-  return cy.api({
-    method: 'POST',
-    url: '/api/agendamentos',
-    headers: {
-      'Authorization': 'Bearer 3a8a9b8fae87baf503e7c5fe5b97fd72'
-    },
-    body: body,
-    failOnStatusCode: false
-  })
-})
