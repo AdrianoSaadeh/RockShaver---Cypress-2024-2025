@@ -48,6 +48,85 @@ describe('POST /api/agendamentos', () => {
       expect(response.body.message).to.eq('Já existe um agendamento para esta data e hora. Por favor, escolha outro horário.')
     })
   })
+
+  it('Deve retornar erro quando o email é inválido', () => {
+    const body = {
+      "emailCliente": "aline.legal&gmail.com",
+      "nomeCliente": "Aline Santos",
+      "data": "20/12/2024",
+      "hora": "16:00",
+      "matricula": "1002",
+      "codigoServico": "2"
+    }
+
+    cy.postAgendamento(body).should((response) => {
+      expect(response.status).to.eq(400)
+      expect(response.body.error).to.eq('O campo emailCliente deve conter um email válido.')
+    })
+  })
+
+  it('Deve retornar erro quando a matricula do funcionario não existe', () => {
+    const body = {
+      "emailCliente": "aline.legal@gmail.com",
+      "nomeCliente": "Aline Santos",
+      "data": "20/12/2024",
+      "hora": "16:00",
+      "matricula": "9999",
+      "codigoServico": "2"
+    }
+
+    cy.postAgendamento(body).should((response) => {
+      expect(response.status).to.eq(404)
+      expect(response.body.error).to.eq('Funcionário não encontrado.')
+    })
+  })
+
+  it('Deve retornar erro quando ao codigo de serviço não existe', () => {
+    const body = {
+      "emailCliente": "aline.legal@gmail.com",
+      "nomeCliente": "Aline Santos",
+      "data": "20/12/2024",
+      "hora": "16:00",
+      "matricula": "1001",
+      "codigoServico": "10"
+    }
+
+    cy.postAgendamento(body).should((response) => {
+      expect(response.status).to.eq(404)
+      expect(response.body.error).to.eq('Serviço não encontrado para o código fornecido.')
+    })
+  })
+
+  context('Campos Obrigatórios', () => {
+    const camposObrigatorios = [
+      { campo: 'emailCliente', mensagem: 'O campo emailCliente é obrigatório.' },
+      { campo: 'nomeCliente', mensagem: 'O campo nomeCliente é obrigatório.' },
+      { campo: 'data', mensagem: 'O campo data é obrigatório.' },
+      { campo: 'hora', mensagem: 'O campo hora é obrigatório.' },
+      { campo: 'matricula', mensagem: 'O campo matricula é obrigatório.' },
+      { campo: 'codigoServico', mensagem: 'O campo codigoServico é obrigatório.' }
+    ]
+
+    camposObrigatorios.forEach((x) => {
+      it(`Deve retornar erro quando o ${x.campo} é obrigatório`, () => {
+        const body = {
+          "emailCliente": "aline.legal@gmail.com",
+          "nomeCliente": "Aline Santos",
+          "data": "20/12/2024",
+          "hora": "16:00",
+          "matricula": "9999",
+          "codigoServico": "2"
+        }
+
+        delete body[x.campo]
+
+        cy.postAgendamento(body).should((response) => {
+          expect(response.status).to.eq(400)
+          expect(response.body.error).to.eq(x.mensagem)
+        })
+      })
+    })
+  })
 })
 
 Cypress.Commands.add('postAgendamento', (body) => {
