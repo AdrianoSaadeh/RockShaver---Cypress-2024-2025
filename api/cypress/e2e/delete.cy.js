@@ -34,30 +34,19 @@ describe('DELETE /agendamentos/:id', () => {
         })
 
         it('Deve poder remover pelo id', () => {
-            cy.api({
-                method: 'DELETE',
-                url: `http://localhost:3333/api/agendamentos/${agendamentoId}`,
-                headers: {
-                    Authorization: `Bearer ${Cypress.env('token')}`
-                }
-            }).should((response) => {
-                expect(response.status).to.eq(200)
-                expect(response.body.message).to.eq('Agendamento cancelado com sucesso')
-            })
+            cy.deletaAgendamento(agendamentoId)
+                .should((response) => {
+                    expect(response.status).to.eq(200)
+                    expect(response.body.message).to.eq('Agendamento cancelado com sucesso')
+                })
         })
     })
 
     it('Deve retornar 404 quando o agendamento não existe', () => {
-        cy.api({
-            method: 'DELETE',
-            url: `http://localhost:3333/api/agendamentos/${new Types.ObjectId()}`,
-            headers: {
-                Authorization: `Bearer ${Cypress.env('token')}`
-            },
-            failOnStatusCode: false
-        }).should((response) => {
-            expect(response.status).to.eq(404)
-            expect(response.body.error).to.eq('Agendamento não encontrado')
-        })
+        cy.deletaAgendamento(new Types.ObjectId())
+            .should((response) => {
+                expect(response.status).to.eq(404)
+                expect(response.body.error).to.eq('Agendamento não encontrado')
+            })
     })
 })

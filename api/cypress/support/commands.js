@@ -73,3 +73,16 @@ Cypress.Commands.add('login', (matricula, senha) => {
         Cypress.env('token', response.body.token)
     })
 })
+
+Cypress.Commands.add('deletaAgendamento', (id) => {
+    return cy.api({
+        method: 'DELETE',
+        url: `http://localhost:3333/api/agendamentos/${id}`,
+        headers: {
+            Authorization: `Bearer ${Cypress.env('token')}`
+        },
+        failOnStatusCode: false
+    })
+})
+
+
